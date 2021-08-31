@@ -1,6 +1,7 @@
 <template>
   <v-footer app class="main-cont">
-     <a cass="foter-a" href="https://mmis.ru/" target="_blank">Разработано ООО "Лаборатория ММИС"</a>
+    <v-spacer></v-spacer>
+     <a cass="foter-a d-inline-flex justify-end" href="https://mmis.ru/" target="_blank">Разработано ООО "Лаборатория ММИС"</a>
   </v-footer>
 </template>
 
@@ -26,7 +27,7 @@ name: "Footer",
     font-size: 14px !important;
     line-height: 20px !important;
     color: #FFFFFF !important;
-    text-align: right;
+    text-align: right!important;
   }
 
   a{
