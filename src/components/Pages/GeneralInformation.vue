@@ -90,13 +90,18 @@ name: "GeneralInformation",
         oReq.responseType = "arraybuffer";        
 
         oReq.onload = function() {
-            var arraybuffer = oReq.response;
-            
+            var arraybuffer = oReq.response;                   
+
             var data = new Uint8Array(arraybuffer);
-            var arr = new Array();    
+            var arr = new Array();   
+            
+            console.log(data)
 
             for (var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+
             var bstr = arr.join("");
+
+            console.log(bstr)
 
             var workbook = XLSX.read(bstr, {
                 type: "binary"
