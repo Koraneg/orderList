@@ -83,8 +83,8 @@ name: "GeneralInformation",
 
   methods:{
      previewFiles() {
-        //var url = "https://skynet-service.com/price/price_copy.xls";
-        var url = "./assets/test.xlsx"; 
+        var url = "https://skynet-service.com/price/price_copy.xls";
+        //var url = "./assets/test.xlsx"; 
         var oReq = new XMLHttpRequest();
         oReq.open("GET", url, true);
         oReq.responseType = "arraybuffer";        
