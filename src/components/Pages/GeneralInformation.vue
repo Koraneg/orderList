@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-container fluid style="width:100%;">
-            <input @change="handleFileChange" type="file"/>
+            <!--<input @change="handleFileChange" type="file"/>-->
             <v-row v-if="orders.length!==0">
                 <v-col>
                     <DxDataGrid
@@ -17,20 +17,19 @@
                         <DxHeaderFilter
                                 :visible="true"
                         />
-                        <DxColumn data-field="Код"/>
-                        <DxColumn data-field="Артикул"/>
+                        <DxColumn data-field="Артикул" :width="120"/>
                         <DxColumn data-field="Наименование"/>
-                        <DxColumn data-field="ОПТ"/>
-                        <DxColumn data-field="ОПТ-Мастер"/>
-                        <DxColumn data-field="Описание"/>
+                        <DxColumn data-field="ОПТ" :width="100"/>
+                        <DxColumn data-field="ОПТ-Мастер" :width="100"/>
                         <DxColumn
                                 :group-index="0"
                                 data-field="Название группы"
+                                caption=""
                         />
 
                         <DxGroupPanel :visible="true"/>
                         <DxGrouping :auto-expand-all="autoExpandAll"/>
-                        <DxPaging :page-size="19"/>
+                        <DxPaging :page-size="1000000"/>
                         <DxSearchPanel :visible="true"/>
                     </DxDataGrid>
                 </v-col>
@@ -61,8 +60,10 @@
         DxSearchPanel,
         DxPaging,
         DxHeaderFilter,
-        DxFilterRow
+        DxFilterRow,
     } from 'devextreme-vue/data-grid';
+    import ruMessages from "devextreme/localization/messages/ru.json";
+    import { locale, loadMessages } from "devextreme/localization";
     import XLSX from 'xlsx';
 
     export default {
@@ -75,6 +76,9 @@
             DxDataGrid,
             DxHeaderFilter,
             DxFilterRow,
+            ruMessages,
+            locale, 
+            loadMessages
         },
         name: "GeneralInformation",
         data: () => ({
@@ -83,18 +87,24 @@
         }),
 
         methods: {
-          downloadFile () {
-            fetch('https://skynet-service.com/price/price.xls', {
-              method: 'GET', // *GET, POST, PUT, DELETE, etc.
-              mode: 'no-cors', // no-cors, *cors, same-origin
+          downloadFileFromSite () {
+            fetch('/price_copy.xls', 
+            //fetch('https://skynet-service.com/price/price_copy.xls', 
+            {
+              method: 'GET', // *GET, POST, PUT, DELETE, etc.             
             }).then(response => response.blob()).then(blob => {
-              console.log(blob)
+              this.fileToDevExtreme(this.blobToFile(blob, "test"))
             })
-
-            //console.log(await response.blob())
           },
-            handleFileChange(e) {
-                let file = e.target.files[0]
+
+          blobToFile(theBlob, fileName){
+              theBlob.lastModifiedDate = new Date();
+              theBlob.name = fileName;
+              return theBlob;
+          },
+
+          fileToDevExtreme(e) {
+                let file = e
                 if (file) {
                     var fileReader = new FileReader();
                     fileReader.onload = (event) => {
@@ -108,9 +118,7 @@
                                 workbook.Sheets[sheet]
                             );
                             let jsonObject = JSON.stringify(rowObject, null, '\t');
-                          console.log(this.orders)
                           this.orders = JSON.parse(jsonObject)
-                          console.log(this.orders)
                             // document.getElementById("jsonData").innerHTML = jsonObject;
                         });
                     };
@@ -118,45 +126,16 @@
                 }
 
             },
-            previewFiles() {
-                var url = "https://skynet-service.com/price/price_copy.xls";
-                //var url = "./assets/test.xlsx";
-                var oReq = new XMLHttpRequest();
-                oReq.open("GET", url, true);
-                oReq.responseType = "arraybuffer";
-
-                oReq.onload = function () {
-                    var arraybuffer = oReq.response;
-
-                    var data = new Uint8Array(arraybuffer);
-                    var arr = new Array();
-
-                    console.log(data)
-
-                    for (var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
-
-                    var bstr = arr.join("");
-
-                    console.log(bstr)
-
-                    var workbook = XLSX.read(bstr, {
-                        type: "binary"
-                    });
-
-                    var first_sheet_name = workbook.SheetNames[0];
-                    var worksheet = workbook.Sheets[first_sheet_name];
-                    console.log(XLSX.utils.sheet_to_json(worksheet, {
-                        raw: true
-                    }));
-                }
-
-                oReq.send();
-            }
         },
 
         mounted() {
-          this.downloadFile()
-        }
+          this.downloadFileFromSite()
+        },
+
+        created() {
+        loadMessages(ruMessages);
+        locale(navigator.language);
+    }
     }
 
 
@@ -178,6 +157,4 @@
         margin-top: 10px;
     }
 
-    <
-    /
-    styl
+    </style>
