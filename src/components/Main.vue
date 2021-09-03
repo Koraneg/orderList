@@ -27,20 +27,7 @@
                   <p class="sub-logo mb-0">прайс лист компании</p>
                 </v-col>
               </v-row>
-          </v-col>
-          <v-col ></v-col>
-          <v-col md="auto">
-            <v-btn
-              text
-              class=" white--text mt-2 pr-0"
-              href="https://skynet-service.com/price/price.xls"
-            >
-              Скачать excel-копию
-            <v-icon class="ml-2">
-                  mdi-file-excel
-            </v-icon>
-            </v-btn>
-          </v-col>
+          </v-col>      
         </v-row>
       </v-container>
   </v-app-bar>
