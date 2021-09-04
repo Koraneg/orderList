@@ -4,6 +4,7 @@
             <!--<input @change="handleFileChange" type="file"/>-->
             <v-row v-if="orders.length!==0">
                 <v-col>
+                    <div class="dx-button-mode-contained-copy">Скачать прайс лист</div>
                     <DxDataGrid
                             :allow-column-reordering="true"
                             :data-source="orders"
@@ -11,10 +12,10 @@
                             :show-borders="true"
                             @exporting="onExporting"
                     >
-                        <DxColumn data-field="Артикул" :width="120" cell-template="vendorСode" :allow-sorting="false"/>
-                        <DxColumn data-field="Наименование" :allow-sorting="false"/>
-                        <DxColumn data-field="ОПТ" :width="100" cell-template="opt" :allow-sorting="false"/>
-                        <DxColumn data-field="ОПТ-Мастер" :width="100" cell-template="opt-master" :allow-sorting="false"/>
+                        <DxColumn data-field="Артикул" :width="120" cell-template="vendorСode" :allow-sorting="false" :hiding-priority="1"/>
+                        <DxColumn data-field="Наименование" :allow-sorting="false" :hiding-priority="4"/>
+                        <DxColumn data-field="ОПТ" :width="100" cell-template="opt" :allow-sorting="false" :hiding-priority="3"/>
+                        <DxColumn data-field="ОПТ-Мастер" :width="100" cell-template="opt-master" :allow-sorting="false" :hiding-priority="2"/>
                         <DxColumn
                                 :group-index="0"
                                 data-field="Название группы"
@@ -37,6 +38,7 @@
                         <DxSearchPanel :visible="true"/>
                         <DxExport
                             :enabled="true"
+                            :texts="111"
                         />
                     </DxDataGrid>
                 </v-col>
@@ -93,38 +95,13 @@
             autoExpandAll: true,
             orders: [],
             loading:true,
-                  saleAmountHeaderFilter: [{
-        text: 'Less than $3000',
-        value: ['SaleAmount', '<', 3000]
-      }, {
-        text: '$3000 - $5000',
-        value: [
-          ['SaleAmount', '>=', 3000],
-          ['SaleAmount', '<', 5000]
-        ]
-      }, {
-        text: '$5000 - $10000',
-        value: [
-          ['SaleAmount', '>=', 5000],
-          ['SaleAmount', '<', 10000]
-        ]
-      }, {
-        text: '$10000 - $20000',
-        value: [
-          ['SaleAmount', '>=', 10000],
-          ['SaleAmount', '<', 20000]
-        ]
-      }, {
-        text: 'Greater than $20000',
-        value: ['SaleAmount', '>=', 20000]
-      }],
         }),
 
         methods: {
           downloadFileFromSite () {
             this.loading=true;
-            fetch('/price_copy.xls', 
-            //fetch('https://skynet-service.com/price/price_copy.xls', 
+            //fetch('/price_copy.xls', 
+            fetch('https://skynet-service.com/price/price_copy.xls', 
             {
               method: 'GET', // *GET, POST, PUT, DELETE, etc.             
             }).then(response => response.blob()).then(blob => {
@@ -168,7 +145,7 @@
       const worksheet = workbook.addWorksheet('Companies');
 
       worksheet.columns = [
-        { width: 15 }, { width: 100 }, { width: 12 }, { width: 13 }
+        { width: 15 }, { width: 100 }, { width: 14 }, { width: 18 }
       ];
 
       exportDataGrid({
@@ -197,6 +174,12 @@
             excelCell.value = gridCell.value;
             excelCell.fill = { type: 'pattern', pattern:'solid', fgColor: { argb: '5983B0' } };
             excelCell.font = { color: { argb: 'FFFFFF' }, bold: true};
+            excelCell.border = {
+                top: {style:'thin', color: {argb:'000000'}},
+                left: {style:'thin', color: {argb:'000000'}},
+                bottom: {style:'thin', color: {argb:'000000'}},
+                right: {style:'thin', color: {argb:'000000'}}
+            };
           }
         }
       }).then(() => {
@@ -206,17 +189,18 @@
       });
       e.cancel = true;
     },
+
         },
 
         mounted() {
           this.downloadFileFromSite();
- 
+            
         },
 
         created() {
-        loadMessages(ruMessages);
-        locale(navigator.language);
-    }
+            loadMessages(ruMessages);
+            locale(navigator.language);
+        }
     }
 
 
@@ -254,5 +238,62 @@
     td{
         border: 1px solid #ddd !important;
     }
+
+
+        .dx-button-mode-contained-copy {
+        background-color: #0353B4;
+        border-color: #0353B4;
+        color: #fff !important;
+        width: 200px;
+        padding: 5px;
+        border-radius: 5px;
+        text-align: center;
+        text-transform: capitalize;
+        position: absolute;
+        top: 26px;
+        z-index: 2;
+        right: 192px;
+    }
+
+    .dx-button-mode-contained-copy:hover {
+    background-color: #033e7c;
+    border-color: #033e7c;
+    color: #fff !important;
+    
+    }
+
+    .dx-button-mode-contained-copy:focus {
+    background-color: #033e7c;
+    border-color: #033e7c;
+    color: #fff !important;
+    }
+
+    .dx-button-mode-contained {
+    background-color: #0353B4;
+    border-color: #0353B4;
+    color: #fff !important;
+    width: 237px !important;
+    position: absolute;
+    top: -1px;
+    z-index: 3!important;
+    right: 181px;    
+    opacity: 0;
+    }
+
+    .dx-button-mode-contained:hover {
+    background-color: #033e7c;
+    border-color: #033e7c;
+    color: #fff !important;
+    }
+
+    .dx-button-mode-contained:focus {
+    background-color: #033e7c;
+    border-color: #033e7c;
+    color: #fff !important;
+    }
+
+    .dx-button-mode-contained .dx-icon {
+    color: #fff !important;
+    }   
 
     </style>
