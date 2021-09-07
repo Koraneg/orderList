@@ -1,8 +1,52 @@
 <template>
     <div>
         <v-container fluid style="width:100%;">
+            <v-row justify="center">
+                <v-dialog
+                v-model="loading"
+                overlay-opacity="1"
+                overlay-color="#fff"
+                >
+                <v-card class="load-card">
+                            <v-progress-circular
+                            :size="100"
+                            color="primary"
+                            indeterminate
+                            ></v-progress-circular>
+                </v-card>
+                </v-dialog>
+            </v-row>
             <!--<input @change="handleFileChange" type="file"/>-->
-            <v-row v-if="orders.length!==0">
+            <v-row v-if="listOfCities.length!==0" no-gutters>
+                <v-col>
+                    <v-row no-gutters>
+                        <v-spacer></v-spacer>
+                        <v-col md="auto" class="mr-3 select-text">
+                            Выберите город:
+                        </v-col>
+                        <v-col md="auto">
+                            <v-autocomplete
+                            auto-select-first
+                            clearable
+                            solo
+                            :items="listOfCities"
+                            v-model="city"
+                            @change="downloadFileFromSite"
+                            dense
+                            hide-details
+                            >
+                                <template v-slot:selection="data">
+                                    {{ data.item.Сity}}
+                                </template>
+                                <template v-slot:item="data" >
+                                    <v-list-item-content v-text="data.item.Сity" style="color: #000 !important;background-color: #fff;background: #fff;  caret-color: #fff !important;"></v-list-item-content>                                                 
+                                </template>
+                            </v-autocomplete>
+                        </v-col>
+                    </v-row>
+                </v-col>
+            </v-row>
+            <v-row v-if="orders.length!==0" >
                 <v-col>
                     <div class="dx-button-mode-contained-copy">Скачать прайс лист</div>
                     <DxDataGrid
@@ -38,12 +82,11 @@
                         <DxSearchPanel :visible="true"/>
                         <DxExport
                             :enabled="true"
-                            :texts="111"
                         />
                     </DxDataGrid>
                 </v-col>
             </v-row>
-            <v-row v-else>
+            <v-row v-if="orders.length===0 && !loading">
                 <v-col>
                     <v-alert
                             text
@@ -95,19 +138,67 @@
             autoExpandAll: true,
             orders: [],
             loading:true,
+            listOfCities:[],
+            city: {Link:"", Сity:""},
         }),
 
         methods: {
-          downloadFileFromSite () {
+        initialization(){
+           if(this.city.Link===""){
+                //this.city.Link="/price_copy.xls"
+                this.city.Link="https://skynet-service.com/price/rostov.xls"
+                this.city.Сity="Ростов"
+                this.downloadFileFromSite (this.city)
+            }
+        },
+
+        downloadFileListOfCitiesFromSite () {
             this.loading=true;
-            //fetch('/price_copy.xls', 
-            fetch('https://skynet-service.com/price/price_copy.xls', 
+            //fetch('/listOfCities.xlsx', 
+            fetch('https://skynet-service.com/price/listOfCities.xlsx', 
             {
               method: 'GET', // *GET, POST, PUT, DELETE, etc.             
             }).then(response => response.blob()).then(blob => {
-              this.fileToDevExtreme(this.blobToFile(blob, "test"))
+              this.fileToJsonCity(this.blobToFile(blob, "City"))
             })
-            this.loading=false;
+            
+          },
+
+          fileToJsonCity(e) {
+                let file = e
+                if (file) {
+                    var fileReader = new FileReader();
+                    fileReader.onload = (event) => {
+                        var data = event.target.result;
+
+                        var workbook = XLSX.read(data, {
+                            type: "binary"
+                        });
+                        workbook.SheetNames.forEach(sheet => {
+                            let rowObject = XLSX.utils.sheet_to_row_object_array(
+                                workbook.Sheets[sheet]
+                            );
+                            let jsonObject = JSON.stringify(rowObject, null, '\t');
+                          this.listOfCities = JSON.parse(jsonObject)                                                
+                        });
+                    };
+                    fileReader.readAsBinaryString(file);
+                }
+                this.initialization(); 
+            },
+
+
+          downloadFileFromSite (e) {
+            this.loading=true;
+            if(e.Link!=="")
+            {
+                fetch(e.Link, 
+                {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.             
+                }).then(response => response.blob()).then(blob => {
+                this.fileToDevExtreme(this.blobToFile(blob, "test"))
+                })              
+            }
           },
 
           blobToFile(theBlob, fileName){
@@ -131,15 +222,16 @@
                                 workbook.Sheets[sheet]
                             );
                             let jsonObject = JSON.stringify(rowObject, null, '\t');
-                          this.orders = JSON.parse(jsonObject)
-                            // document.getElementById("jsonData").innerHTML = jsonObject;
+                          this.orders = JSON.parse(jsonObject)                       
                         });
                     };
                     fileReader.readAsBinaryString(file);
-                }
-
+                }      
+                setTimeout(() => this.loading=false, 3000);
             },
 
+
+        /*Формирование файла в эксель*/
       onExporting(e) {
       const workbook = new Workbook();
       const worksheet = workbook.addWorksheet('Companies');
@@ -193,13 +285,12 @@
         },
 
         mounted() {
-          this.downloadFileFromSite();
-            
+          this.downloadFileListOfCitiesFromSite();            
         },
 
         created() {
             loadMessages(ruMessages);
-            locale(navigator.language);
+            locale(navigator.language);           
         }
     }
 
@@ -250,7 +341,7 @@
         text-align: center;
         text-transform: capitalize;
         position: absolute;
-        top: 26px;
+        top: 65px;
         z-index: 2;
         right: 192px;
     }
@@ -295,5 +386,41 @@
     .dx-button-mode-contained .dx-icon {
     color: #fff !important;
     }   
+
+    .select-text{
+        font-size: 17px !important;
+    font-weight: 500;
+    color: #bfbfbf;
+    padding-top: 8px !important;
+        min-width: 300px;
+    text-align: right;
+    }
+
+    .load-card{
+        width: 160px;
+        text-align: center;
+        height: 160px;
+        padding: 33px;
+        margin: 0 auto;
+    }
+
+    .v-dialog {
+        width: 160px !important;
+        text-align: center !important;
+        height: 160px !important;
+        padding: 33px !important;
+        margin: 0 auto !important;
+        padding: 0px !important;
+        box-shadow:none !important;
+    }
+
+    .v-overlay--active {
+        z-index: 3 !important;
+    }
+
+    .no-style{
+        background: #fff;
+        color: #000;
+    }
 
     </style>
