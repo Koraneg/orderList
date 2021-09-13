@@ -16,24 +16,21 @@
                 </v-card>
                 </v-dialog>
             </v-row>
-            <!--<input @change="handleFileChange" type="file"/>-->
+            
             <v-row v-if="listOfCities.length!==0" no-gutters>
                 <v-col>
-                    <v-row no-gutters>
-                        <v-spacer></v-spacer>
-                        <v-col md="auto" class="mr-3 select-text">
+                    <v-row no-gutters>                       
+                        <v-col md="auto" class="mr-3 mt-2 select-text">
                             Выберите город:
                         </v-col>
-                        <v-col md="auto">
-                            <v-autocomplete
-                            auto-select-first
-                            clearable
-                            solo
-                            :items="listOfCities"
-                            v-model="city"
-                            @change="downloadFileFromSite"
-                            dense
-                            hide-details
+                        <v-col md="auto" style="min-width:300px;" class="py-2" >                         
+                            <v-select
+                                :items="listOfCities"
+                                solo
+                                @change="downloadFileFromSite"
+                                dense
+                                hide-details
+                                v-model="city"
                             >
                                 <template v-slot:selection="data">
                                     {{ data.item.Сity}}
@@ -41,20 +38,25 @@
                                 <template v-slot:item="data" >
                                     <v-list-item-content v-text="data.item.Сity" style="color: #000 !important;background-color: #fff;background: #fff;  caret-color: #fff !important;"></v-list-item-content>                                                 
                                 </template>
-                            </v-autocomplete>
+                            </v-select>
+                        </v-col>
+                        <v-spacer class="no-spacer"></v-spacer>
+                        <v-col md="auto">
+                            <div class="dx-button-mode-contained-copy">Скачать прайс лист</div>
                         </v-col>
                     </v-row>
                 </v-col>
             </v-row>
-            <v-row v-if="orders.length!==0" >
+            <v-row v-if="orders.length!==0" class="no-margin">
                 <v-col>
-                    <div class="dx-button-mode-contained-copy">Скачать прайс лист</div>
+                    
                     <DxDataGrid
                             :allow-column-reordering="true"
                             :data-source="orders"
                             key-expr="Код"
                             :show-borders="true"
                             @exporting="onExporting"
+                            :show-row-lines="true"
                     >
                         <DxColumn data-field="Артикул" :width="120" cell-template="vendorСode" :allow-sorting="false" :hiding-priority="1"/>
                         <DxColumn data-field="Наименование" :allow-sorting="false" :hiding-priority="4"/>
@@ -145,8 +147,8 @@
         methods: {
         initialization(){
            if(this.city.Link===""){
-                //this.city.Link="/price_copy.xls"
-                this.city.Link="https://skynet-service.com/price/rostov.xls"
+                this.city.Link="/price_copy.xls"
+                //this.city.Link="https://skynet-service.com/price/price.xls"
                 this.city.Сity="Ростов"
                 this.downloadFileFromSite (this.city)
             }
@@ -154,8 +156,8 @@
 
         downloadFileListOfCitiesFromSite () {
             this.loading=true;
-            //fetch('/listOfCities.xlsx', 
-            fetch('https://skynet-service.com/price/listOfCities.xlsx', 
+            fetch('/listOfCities.xlsx', 
+            //fetch('https://skynet-service.com/price/listOfCities.xlsx', 
             {
               method: 'GET', // *GET, POST, PUT, DELETE, etc.             
             }).then(response => response.blob()).then(blob => {
@@ -340,10 +342,10 @@
         border-radius: 5px;
         text-align: center;
         text-transform: capitalize;
-        position: absolute;
+        /*position: absolute;
         top: 65px;
         z-index: 2;
-        right: 192px;
+        right: 192px;*/
     }
 
     .dx-button-mode-contained-copy:hover {
@@ -363,11 +365,11 @@
     background-color: #0353B4;
     border-color: #0353B4;
     color: #fff !important;
-    width: 237px !important;
+    width: 365px !important;
     position: absolute;
-    top: -1px;
+    top: -50px;
     z-index: 3!important;
-    right: 181px;    
+    right: 0px;
     opacity: 0;
     }
 
@@ -387,13 +389,17 @@
     color: #fff !important;
     }   
 
+    .dx-datagrid-group-closed{
+        color: #fff !important;
+    }
+
     .select-text{
         font-size: 17px !important;
-    font-weight: 500;
-    color: #bfbfbf;
-    padding-top: 8px !important;
-        min-width: 300px;
-    text-align: right;
+        font-weight: 500;
+        color: #bfbfbf;
+        padding-top: 8px !important;
+         /*   min-width: 300px;*/
+        /*text-align: right;*/
     }
 
     .load-card{
@@ -421,6 +427,72 @@
     .no-style{
         background: #fff;
         color: #000;
+    }
+
+    .dx-datagrid-group-panel .dx-group-panel-item {
+        display: none;
+    }
+
+    .dx-selection-disabled{
+        display: none;
+    }
+
+         @media screen and (min-width: 638px){ 
+         .no-margin{
+             margin-top: -19px !important;
+            }
+     }
+
+     @media screen and (max-width: 714px) and (min-width: 616px){ 
+         .dx-button-mode-contained {
+             top: -82px;
+            }
+     }
+
+    @media screen and (max-width: 615px) and (min-width: 459px){ 
+        .dx-button-mode-contained {
+            top: -46px;
+            left: -235px;
+        }
+
+        .select-text {
+            min-width: 177px;
+        }
+     }
+
+    @media screen and (max-width: 459px) { 
+        .select-text{
+         min-width: 300px;
+        }
+
+    .dx-button-mode-contained-copy {
+    width: 300px;
+    margin: 0 auto;
+    }
+
+    .dx-toolbar-item-content > .dx-texteditor{
+        width: 296px !important;
+    }
+
+    .dx-button-mode-contained {
+        width: 646px !important;
+        top: -46px;
+        left: -20px;
+    }
+
+    .select-text{
+            text-align: center;
+    }
+
+    .no-spacer{
+        display: none;
+    }
+
+    .v-select {
+        width: 300px;
+        margin: 0 auto !important;
+    }
+
     }
 
     </style>
