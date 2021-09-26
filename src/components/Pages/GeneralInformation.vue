@@ -31,8 +31,9 @@
                                 dense
                                 hide-details
                                 v-model="city"
+                                label="Ростов"
                             >
-                                <template v-slot:selection="data">
+                               <template v-slot:selection="data">
                                     {{ data.item.Сity}}
                                 </template>
                                 <template v-slot:item="data" >
@@ -56,7 +57,6 @@
                             key-expr="Код"
                             :show-borders="true"
                             @exporting="onExporting"
-                            :show-row-lines="true"
                     >
                         <DxColumn data-field="Артикул" :width="120" cell-template="vendorСode" :allow-sorting="false" :hiding-priority="1"/>
                         <DxColumn data-field="Наименование" :allow-sorting="false" :hiding-priority="4"/>
@@ -147,17 +147,17 @@
         methods: {
         initialization(){
            if(this.city.Link===""){
-                this.city.Link="/price_copy.xls"
-                //this.city.Link="https://skynet-service.com/price/price.xls"
-                this.city.Сity="Ростов"
+                this.city.Link=this.listOfCities[0].Link 
+                this.city.Сity=this.listOfCities[0].Сity
                 this.downloadFileFromSite (this.city)
             }
         },
 
         downloadFileListOfCitiesFromSite () {
             this.loading=true;
-            fetch('/listOfCities.xlsx', 
-            //fetch('https://skynet-service.com/price/listOfCities.xlsx', 
+            console.log("Разработчик Роман Дробязкин")
+            //fetch('/listOfCities.xlsx', 
+            fetch('https://skynet-service.com/price/listOfCities.xlsx', 
             {
               method: 'GET', // *GET, POST, PUT, DELETE, etc.             
             }).then(response => response.blob()).then(blob => {
@@ -186,7 +186,7 @@
                     };
                     fileReader.readAsBinaryString(file);
                 }
-                this.initialization(); 
+                setTimeout(this.initialization, 1000); //this.initialization(); 
             },
 
 
@@ -300,6 +300,14 @@
 </script>
 
 <style>
+.dx-datagrid-nowrap, .dx-datagrid-nowrap .dx-header-row>td>.dx-datagrid-text-content {
+    white-space: normal !important;
+}
+
+    .v-application .primary--text:hover {
+        border-bottom: 2px solid;
+    }
+
     .options {
         padding: 20px;
         margin-top: 20px;

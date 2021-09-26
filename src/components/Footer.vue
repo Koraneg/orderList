@@ -1,7 +1,6 @@
 <template>
   <v-footer app class="main-cont">
-    <v-spacer></v-spacer>
-     <a cass="foter-a d-inline-flex justify-end" href="https://mmis.ru/" target="_blank">Разработано ООО "Лаборатория ММИС"</a>
+    <p></p>
   </v-footer>
 </template>
 
