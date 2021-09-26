@@ -48,22 +48,24 @@
                     </v-row>
                 </v-col>
             </v-row>
-            <v-row>
+            <!--<v-row>
                 <v-col>
                     <v-autocomplete
                         v-model="model"
                         :items="orders"
                         :loading="isLoading"
-                        @keydown="test"
+                        @update:search-input="test"
+                        @change="serchForList"
                         hide-no-data
                         hide-selected
                         item-text="Наименование"                      
                         prepend-icon="mdi-database-search"
                         return-object
                         hide-details
+                        solo
                         ></v-autocomplete>
                 </v-col>
-            </v-row>
+            </v-row>-->
             <v-row v-if="orders.length!==0" class="no-margin">
                 <v-col>
                     
@@ -97,7 +99,7 @@
                         <DxGroupPanel :visible="true"/>
                         <DxGrouping :auto-expand-all="autoExpandAll"/>
                         <DxPaging :page-size="1000000"/>
-                        <DxSearchPanel :visible="false"/>
+                        <DxSearchPanel :visible="true"/>
                         <DxExport
                             :enabled="true"
                         />
@@ -168,8 +170,15 @@
 
         methods: {
 
-        test(e){
-            
+        serchForList()
+        {
+             this.orders.splice(0, this.orders.length);
+             this.orders.push(this.model)
+        },
+
+        test(e){           
+             if(e.key.length>1 && e.key!=="Backspace")
+                return;
 
             if(e.key!=="Backspace")
             {
@@ -179,12 +188,14 @@
                 this.search = this.search.substring(0, this.search.length-1)
             }
 
-            this.orders = this.ordersCopy;
+            this.orders.splice(0, this.orders.length);
 
-            console.log("start = ",this.orders)
-            console.log("start = ",this.ordersCopy)
+            for(let i=0;i<this.ordersCopy.length;i++)
+            {
+                this.orders.push(this.ordersCopy[i])
+            }          
 
-            this.searchMass=this.search.split(" ");            
+            this.searchMass=this.search.split(" ");                
 
                 for(let i=0;i<this.orders.length;i++)
                 {
@@ -218,17 +229,15 @@
                                 isCurent = true;
                         }
 
-                         if(this.orders[j]["Описание"].toString().includes(this.searchMass[j]))
+                        /* if(this.orders[j]["Описание"].toString().includes(this.searchMass[j]))
                         {
                                 isCurent = true;
-                        }
+                        }*/
                     }
 
                     if(!isCurent)
                         this.orders.splice(i, 1);
                 }
-
-                console.log("end = ",this.orders)
 
             //this.listOfCities = this.listOfCities.filter(w=>w.contains===this.search)
         },
@@ -313,7 +322,7 @@
                             );
                             let jsonObject = JSON.stringify(rowObject, null, '\t');
                           this.orders = JSON.parse(jsonObject)
-                          this.ordersCopy =  this.orders           
+                          this.ordersCopy =  JSON.parse(jsonObject)          
                         });
                     };
                     fileReader.readAsBinaryString(file);
