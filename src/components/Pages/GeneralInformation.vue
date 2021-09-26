@@ -48,6 +48,22 @@
                     </v-row>
                 </v-col>
             </v-row>
+            <v-row>
+                <v-col>
+                    <v-autocomplete
+                        v-model="model"
+                        :items="orders"
+                        :loading="isLoading"
+                        @keydown="test"
+                        hide-no-data
+                        hide-selected
+                        item-text="Наименование"                      
+                        prepend-icon="mdi-database-search"
+                        return-object
+                        hide-details
+                        ></v-autocomplete>
+                </v-col>
+            </v-row>
             <v-row v-if="orders.length!==0" class="no-margin">
                 <v-col>
                     
@@ -81,7 +97,7 @@
                         <DxGroupPanel :visible="true"/>
                         <DxGrouping :auto-expand-all="autoExpandAll"/>
                         <DxPaging :page-size="1000000"/>
-                        <DxSearchPanel :visible="true"/>
+                        <DxSearchPanel :visible="false"/>
                         <DxExport
                             :enabled="true"
                         />
@@ -139,12 +155,84 @@
         data: () => ({
             autoExpandAll: true,
             orders: [],
+            ordersCopy: [],
             loading:true,
             listOfCities:[],
             city: {Link:"", Сity:""},
+            descriptionLimit: 60,
+            isLoading: false,
+            model: null,
+            search: "",
+            searchMass: [],
         }),
 
         methods: {
+
+        test(e){
+            
+
+            if(e.key!=="Backspace")
+            {
+                this.search+=e.key
+            }
+            else{
+                this.search = this.search.substring(0, this.search.length-1)
+            }
+
+            this.orders = this.ordersCopy;
+
+            console.log("start = ",this.orders)
+            console.log("start = ",this.ordersCopy)
+
+            this.searchMass=this.search.split(" ");            
+
+                for(let i=0;i<this.orders.length;i++)
+                {
+                   var isCurent = false;
+
+                    for(let j = 0; j<this.searchMass.length;j++)
+                    {
+                        
+                        if(this.orders[j]["Название группы"].toString().includes(this.searchMass[j]))
+                        {
+                                isCurent = true;
+                        }
+
+                        if(this.orders[j]["Артикул"].toString().includes(this.searchMass[j]))
+                        {
+                                isCurent = true;
+                        }
+
+                        if(this.orders[j]["Наименование"].toString().includes(this.searchMass[j]))
+                        {
+                                isCurent = true;
+                        }
+
+                        if(this.orders[j]["ОПТ"].toString().includes(this.searchMass[j]))
+                        {
+                                isCurent = true;
+                        }
+
+                        if(this.orders[j]["ОПТ-Мастер"].toString().includes(this.searchMass[j]))
+                        {
+                                isCurent = true;
+                        }
+
+                         if(this.orders[j]["Описание"].toString().includes(this.searchMass[j]))
+                        {
+                                isCurent = true;
+                        }
+                    }
+
+                    if(!isCurent)
+                        this.orders.splice(i, 1);
+                }
+
+                console.log("end = ",this.orders)
+
+            //this.listOfCities = this.listOfCities.filter(w=>w.contains===this.search)
+        },
+
         initialization(){
            if(this.city.Link===""){
                 this.city.Link=this.listOfCities[0].Link 
@@ -156,8 +244,8 @@
         downloadFileListOfCitiesFromSite () {
             this.loading=true;
             console.log("Разработчик Роман Дробязкин")
-            //fetch('/listOfCities.xlsx', 
-            fetch('https://skynet-service.com/price/listOfCities.xlsx', 
+            fetch('/listOfCities.xlsx', 
+            //fetch('https://skynet-service.com/price/listOfCities.xlsx', 
             {
               method: 'GET', // *GET, POST, PUT, DELETE, etc.             
             }).then(response => response.blob()).then(blob => {
@@ -224,7 +312,8 @@
                                 workbook.Sheets[sheet]
                             );
                             let jsonObject = JSON.stringify(rowObject, null, '\t');
-                          this.orders = JSON.parse(jsonObject)                       
+                          this.orders = JSON.parse(jsonObject)
+                          this.ordersCopy =  this.orders           
                         });
                     };
                     fileReader.readAsBinaryString(file);
@@ -304,9 +393,9 @@
     white-space: normal !important;
 }
 
-    .v-application .primary--text:hover {
+    /*.v-application .primary--text:hover {
         border-bottom: 2px solid;
-    }
+    }*/
 
     .options {
         padding: 20px;
