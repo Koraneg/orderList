@@ -291,8 +291,8 @@
         downloadFileListOfCitiesFromSite () {
             this.loading=true;
             console.log("Разработчик Роман Дробязкин")
-            fetch('/listOfCities.xlsx', 
-            //fetch('https://skynet-service.com/price/listOfCities.xlsx', 
+            //fetch('/listOfCities.xlsx', 
+            fetch('https://skynet-service.com/price/listOfCities.xlsx', 
             {
               method: 'GET', // *GET, POST, PUT, DELETE, etc.             
             }).then(response => response.blob()).then(blob => {
