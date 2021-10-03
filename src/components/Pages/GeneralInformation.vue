@@ -48,14 +48,11 @@
                     </v-row>
                 </v-col>
             </v-row>
-            <!--<v-row>
+            <v-row>
                 <v-col>
                     <v-autocomplete
                         v-model="model"
-                        :items="orders"
-                        :loading="isLoading"
-                        @update:search-input="test"
-                        @change="serchForList"
+                        :items="orders"                  
                         hide-no-data
                         hide-selected
                         item-text="Наименование"                      
@@ -63,9 +60,14 @@
                         return-object
                         hide-details
                         solo
+                        clearable
+                        @change="changeValue"
+                         @keydown="keyPressEvent"
+                         @click:clear="clearMass"
+                         @click="rebornMassForClick"
                         ></v-autocomplete>
                 </v-col>
-            </v-row>-->
+            </v-row>
             <v-row v-if="orders.length!==0" class="no-margin">
                 <v-col>
                     
@@ -77,7 +79,7 @@
                             @exporting="onExporting"
                     >
                         <DxColumn data-field="Артикул" :width="120" cell-template="vendorСode" :allow-sorting="false" :hiding-priority="1"/>
-                        <DxColumn data-field="Наименование" :allow-sorting="false" :hiding-priority="4"/>
+                        <DxColumn data-field="Наименование" :allow-sorting="false" :hiding-priority="4"  />
                         <DxColumn data-field="ОПТ" :width="100" cell-template="opt" :allow-sorting="false" :hiding-priority="3"/>
                         <DxColumn data-field="ОПТ-Мастер" :width="100" cell-template="opt-master" :allow-sorting="false" :hiding-priority="2"/>
                         <DxColumn
@@ -99,7 +101,7 @@
                         <DxGroupPanel :visible="true"/>
                         <DxGrouping :auto-expand-all="autoExpandAll"/>
                         <DxPaging :page-size="1000000"/>
-                        <DxSearchPanel :visible="true"/>
+                        <DxSearchPanel :visible="false"/>
                         <DxExport
                             :enabled="true"
                         />
@@ -162,7 +164,6 @@
             listOfCities:[],
             city: {Link:"", Сity:""},
             descriptionLimit: 60,
-            isLoading: false,
             model: null,
             search: "",
             searchMass: [],
@@ -170,14 +171,53 @@
 
         methods: {
 
-        serchForList()
+        rebornMassForClick()
         {
-             this.orders.splice(0, this.orders.length);
-             this.orders.push(this.model)
+            this.rebornMass();          
         },
 
-        test(e){           
-             if(e.key.length>1 && e.key!=="Backspace")
+
+        changeValue(e)
+        {      
+              
+            if(e===undefined)
+            {   
+                this.loading=true;
+                this.rebornMass();    
+                setTimeout(() => this.loading=false, 3000);            
+            }
+            else
+            {             
+                 this.orders.splice(0, this.orders.length);
+                 if(this.model!==null)
+                 {
+                      this.orders = [this.model];
+                }              
+            }
+        },
+
+        clearMass()
+        {
+            this.loading=true;
+            this.rebornMass();    
+            setTimeout(() => this.loading=false, 3000);   
+        },
+
+        rebornMass()
+        {
+            
+            this.orders.splice(0, this.orders.length);
+            
+            for(let i=0;i<this.ordersCopy.length;i++)
+            {
+                this.orders.push(this.ordersCopy[i])
+            }  
+            
+          
+        },
+        
+        keyPressEvent(e){         
+            if(e.key.length>1 && e.key!=="Backspace")
                 return;
 
             if(e.key!=="Backspace")
@@ -186,60 +226,58 @@
             }
             else{
                 this.search = this.search.substring(0, this.search.length-1)
-            }
+            }      
 
-            this.orders.splice(0, this.orders.length);
+            this.rebornMass()
 
-            for(let i=0;i<this.ordersCopy.length;i++)
-            {
-                this.orders.push(this.ordersCopy[i])
-            }          
+            this.searchMass=this.search.split(" "); 
 
-            this.searchMass=this.search.split(" ");                
+            this.filterMass()
 
-                for(let i=0;i<this.orders.length;i++)
+                       
+        },
+
+        filterMass()
+        {
+            for(let i=0;i<this.orders.length;i++)
                 {
                    var isCurent = false;
 
-                    for(let j = 0; j<this.searchMass.length;j++)
-                    {
+                    for(let j = 0; j<this.searchMass.length;j++)                    {
                         
-                        if(this.orders[j]["Название группы"].toString().includes(this.searchMass[j]))
+                        if(this.orders[i]["Название группы"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()))
+                        {                                                
+                            isCurent = true;
+                        }
+
+                        if(this.orders[i]["Артикул"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()))
                         {
                                 isCurent = true;
                         }
 
-                        if(this.orders[j]["Артикул"].toString().includes(this.searchMass[j]))
+                        if(this.orders[i]["Наименование"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()))
                         {
                                 isCurent = true;
                         }
 
-                        if(this.orders[j]["Наименование"].toString().includes(this.searchMass[j]))
+                        if(this.orders[i]["ОПТ"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()))
                         {
                                 isCurent = true;
                         }
 
-                        if(this.orders[j]["ОПТ"].toString().includes(this.searchMass[j]))
+                        if(this.orders[i]["ОПТ-Мастер"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()))
                         {
                                 isCurent = true;
                         }
-
-                        if(this.orders[j]["ОПТ-Мастер"].toString().includes(this.searchMass[j]))
-                        {
-                                isCurent = true;
-                        }
-
-                        /* if(this.orders[j]["Описание"].toString().includes(this.searchMass[j]))
-                        {
-                                isCurent = true;
-                        }*/
                     }
 
                     if(!isCurent)
-                        this.orders.splice(i, 1);
+                    {
+                       this.orders.splice(i,1);
+                       i--;
+                    }
+                        
                 }
-
-            //this.listOfCities = this.listOfCities.filter(w=>w.contains===this.search)
         },
 
         initialization(){
@@ -385,12 +423,18 @@
         },
 
         mounted() {
-          this.downloadFileListOfCitiesFromSite();            
+          this.downloadFileListOfCitiesFromSite();     
+          //this.filterMass();        
         },
 
         created() {
             loadMessages(ruMessages);
-            locale(navigator.language);           
+            locale(navigator.language);    
+                  
+        },
+
+        computed: {
+
         }
     }
 
@@ -448,10 +492,6 @@
         border-radius: 5px;
         text-align: center;
         text-transform: capitalize;
-        /*position: absolute;
-        top: 65px;
-        z-index: 2;
-        right: 192px;*/
     }
 
     .dx-button-mode-contained-copy:hover {
@@ -471,11 +511,10 @@
     background-color: #0353B4;
     border-color: #0353B4;
     color: #fff !important;
-    width: 365px !important;
-    position: absolute;
-    top: -50px;
+    width: 204px !important;
+    position: relative;
+    top: -122px;
     z-index: 3!important;
-    right: 0px;
     opacity: 0;
     }
 
@@ -549,16 +588,24 @@
             }
      }
 
-     @media screen and (max-width: 714px) and (min-width: 616px){ 
+     @media screen and (max-width: 803px) and (min-width: 616px){ 
          .dx-button-mode-contained {
-             top: -82px;
+             top: -135px;
             }
      }
 
+    @media screen and (max-width: 637px) and (min-width: 616px){ 
+         .dx-button-mode-contained {
+             top: -154px;
+            }
+     }
+
+
     @media screen and (max-width: 615px) and (min-width: 459px){ 
         .dx-button-mode-contained {
-            top: -46px;
-            left: -235px;
+            top: -118px;
+            left: -46%;
+            width: 404px !important;
         }
 
         .select-text {
@@ -581,9 +628,9 @@
     }
 
     .dx-button-mode-contained {
-        width: 646px !important;
-        top: -46px;
-        left: -20px;
+    width: 646px !important;
+    top: -118px;
+    left: 9px;
     }
 
     .select-text{
