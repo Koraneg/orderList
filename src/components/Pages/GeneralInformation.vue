@@ -49,8 +49,8 @@
                 </v-col>
             </v-row>
             <v-row>
-                <v-col>
-                    <v-autocomplete
+                <v-col style="min-width:300px;">
+                   <!-- <v-autocomplete
                         v-model="model"
                         :items="orders"                  
                         hide-no-data
@@ -65,7 +65,41 @@
                          @keydown="keyPressEvent"
                          @click:clear="clearMass"
                          @click="rebornMassForClick"
-                        ></v-autocomplete>
+                        ></v-autocomplete>-->
+                        <v-text-field
+                            label="Введите строку для поиска"
+                            solo
+                            v-model="search"
+                            hide-no-data
+                            hide-details
+                            @keydown="enterPress"
+                        ></v-text-field>
+                </v-col>
+                <v-col md="auto" class="px-1">
+                    <v-btn
+                        outlined
+                        color="#0353B4"
+                        class="mt-2"
+                        @click="filterMass"
+                    >
+                    <v-icon left>
+                        fas fa-search
+                    </v-icon>
+                    Поиск
+                    </v-btn>
+                </v-col>
+                <v-col md="auto" class="px-1 pr-3">
+                    <v-btn
+                        color="#0353B4"
+                        outlined
+                        class="mt-2"
+                        @click="clearMass"
+                    >
+                    <v-icon left>
+                        far fa-times-circle
+                    </v-icon>
+                    Очистить
+                    </v-btn>
                 </v-col>
             </v-row>
             <v-row v-if="orders.length!==0" class="no-margin">
@@ -199,7 +233,8 @@
         clearMass()
         {
             this.loading=true;
-            this.rebornMass();    
+            this.rebornMass();  
+            this.search="";  
             setTimeout(() => this.loading=false, 3000);   
         },
 
@@ -215,31 +250,26 @@
             
           
         },
-        
-        keyPressEvent(e){         
-            if(e.key.length>1 && e.key!=="Backspace")
-                return;
 
-            if(e.key!=="Backspace")
-            {
-                this.search+=e.key
-            }
-            else{
-                this.search = this.search.substring(0, this.search.length-1)
-            }      
-
-            this.rebornMass()
-
-            this.searchMass=this.search.split(" "); 
-
-            this.filterMass()
-
-                       
+        enterPress(e){
+            if(e.key==="Enter")
+               this.filterMass()
         },
 
         filterMass()
         {
-            for(let i=0;i<this.orders.length;i++)
+            this.search = this.search.trim();
+            this.searchMass=this.search.split(" "); 
+
+            this.rebornMass(); 
+
+            this.orders.splice(0, this.orders.length);
+            this.orders=this.ordersCopy.filter(f=>f["Название группы"].toString().toLowerCase().includes(this.search.toLowerCase()) || f["Артикул"].toString().toLowerCase().includes(this.search.toLowerCase()) || f["Наименование"].toString().toLowerCase().includes(this.search.toLowerCase()) || f["ОПТ"].toString().toLowerCase().includes(this.search.toLowerCase()) || f["ОПТ-Мастер"].toString().toLowerCase().includes(this.search.toLowerCase()))
+
+            if(this.orders.length ===0)
+            {
+                this.rebornMass(); 
+                for(let i=0;i<this.orders.length;i++)
                 {
                    var isCurent = false;
 
@@ -278,6 +308,7 @@
                     }
                         
                 }
+            }           
         },
 
         initialization(){
@@ -513,7 +544,7 @@
     color: #fff !important;
     width: 204px !important;
     position: relative;
-    top: -122px;
+    top: -130px;
     z-index: 3!important;
     opacity: 0;
     }
@@ -603,7 +634,7 @@
 
     @media screen and (max-width: 615px) and (min-width: 459px){ 
         .dx-button-mode-contained {
-            top: -118px;
+            top: -195px;
             left: -46%;
             width: 404px !important;
         }
@@ -629,7 +660,7 @@
 
     .dx-button-mode-contained {
     width: 646px !important;
-    top: -118px;
+    top: -195px;
     left: 9px;
     }
 
