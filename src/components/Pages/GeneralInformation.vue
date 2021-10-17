@@ -48,24 +48,8 @@
                     </v-row>
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters>
                 <v-col style="min-width:300px;">
-                   <!-- <v-autocomplete
-                        v-model="model"
-                        :items="orders"                  
-                        hide-no-data
-                        hide-selected
-                        item-text="Наименование"                      
-                        prepend-icon="mdi-database-search"
-                        return-object
-                        hide-details
-                        solo
-                        clearable
-                        @change="changeValue"
-                         @keydown="keyPressEvent"
-                         @click:clear="clearMass"
-                         @click="rebornMassForClick"
-                        ></v-autocomplete>-->
                         <v-text-field
                             label="Введите строку для поиска"
                             solo
@@ -75,25 +59,27 @@
                             @keydown="enterPress"
                         ></v-text-field>
                 </v-col>
-                <v-col md="auto" class="px-1">
+            </v-row>
+            <v-row class="pl-2">
+                               <v-col md="auto" class="px-1">
                     <v-btn
                         outlined
                         color="#0353B4"
-                        class="mt-2"
+                        class="mr-2"
                         @click="filterMass"
+                        small
                     >
                     <v-icon left>
                         fas fa-search
                     </v-icon>
                     Поиск
                     </v-btn>
-                </v-col>
-                <v-col md="auto" class="px-1 pr-3">
+
                     <v-btn
                         color="#0353B4"
                         outlined
-                        class="mt-2"
                         @click="clearMass"
+                        small
                     >
                     <v-icon left>
                         far fa-times-circle
@@ -263,52 +249,10 @@
 
             this.rebornMass(); 
 
-            this.orders.splice(0, this.orders.length);
-            this.orders=this.ordersCopy.filter(f=>f["Название группы"].toString().toLowerCase().includes(this.search.toLowerCase()) || f["Артикул"].toString().toLowerCase().includes(this.search.toLowerCase()) || f["Наименование"].toString().toLowerCase().includes(this.search.toLowerCase()) || f["ОПТ"].toString().toLowerCase().includes(this.search.toLowerCase()) || f["ОПТ-Мастер"].toString().toLowerCase().includes(this.search.toLowerCase()))
-
-            if(this.orders.length ===0)
+            for(let j = 0; j<this.searchMass.length;j++)
             {
-                this.rebornMass(); 
-                for(let i=0;i<this.orders.length;i++)
-                {
-                   var isCurent = false;
-
-                    for(let j = 0; j<this.searchMass.length;j++)                    {
-                        
-                        if(this.orders[i]["Название группы"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()))
-                        {                                                
-                            isCurent = true;
-                        }
-
-                        if(this.orders[i]["Артикул"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()))
-                        {
-                                isCurent = true;
-                        }
-
-                        if(this.orders[i]["Наименование"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()))
-                        {
-                                isCurent = true;
-                        }
-
-                        if(this.orders[i]["ОПТ"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()))
-                        {
-                                isCurent = true;
-                        }
-
-                        if(this.orders[i]["ОПТ-Мастер"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()))
-                        {
-                                isCurent = true;
-                        }
-                    }
-
-                    if(!isCurent)
-                    {
-                       this.orders.splice(i,1);
-                       i--;
-                    }
-                        
-                }
-            }           
+                    this.orders=this.orders.filter(f=>f["Наименование"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()) || f["Артикул"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase())  || f["Название группы"].toString().toLowerCase().includes(this.searchMass[j].toLowerCase()))
+            }   
         },
 
         initialization(){
@@ -322,8 +266,8 @@
         downloadFileListOfCitiesFromSite () {
             this.loading=true;
             console.log("Разработчик Роман Дробязкин")
-            //fetch('/listOfCities.xlsx', 
-            fetch('https://skynet-service.com/price/listOfCities.xlsx', 
+            fetch('/listOfCities.xlsx', 
+            //fetch('https://skynet-service.com/price/listOfCities.xlsx', 
             {
               method: 'GET', // *GET, POST, PUT, DELETE, etc.             
             }).then(response => response.blob()).then(blob => {
@@ -544,7 +488,7 @@
     color: #fff !important;
     width: 204px !important;
     position: relative;
-    top: -130px;
+    top: -150px;
     z-index: 3!important;
     opacity: 0;
     }
@@ -621,7 +565,7 @@
 
      @media screen and (max-width: 803px) and (min-width: 616px){ 
          .dx-button-mode-contained {
-             top: -135px;
+             top: -180px;
             }
      }
 
@@ -634,7 +578,7 @@
 
     @media screen and (max-width: 615px) and (min-width: 459px){ 
         .dx-button-mode-contained {
-            top: -195px;
+            top: -146px;
             left: -46%;
             width: 404px !important;
         }
@@ -660,7 +604,7 @@
 
     .dx-button-mode-contained {
     width: 646px !important;
-    top: -195px;
+    top: -146px;
     left: 9px;
     }
 
