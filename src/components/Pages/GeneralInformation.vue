@@ -51,28 +51,30 @@
             <v-row no-gutters>
                 <v-col style="min-width:300px;">
                         <v-text-field
-                            label="Введите строку для поиска"
+                            label="Введите наименование запчати"
                             solo
+                            dense
                             v-model="search"
                             hide-no-data
                             hide-details
                             @keydown="enterPress"
+                            append-icon="fas fa-search"
+                            background-color="#F4F4F4"
+                            elevation="0"
+                            class="input-serch"
                         ></v-text-field>
                 </v-col>
             </v-row>
             <v-row class="pl-2">
                                <v-col md="auto" class="px-1">
                     <v-btn
-                        outlined
-                        color="#0353B4"
-                        class="mr-2"
+                        color="#0A74C0"
+                        class="mr-2 white--text serch-but"
                         @click="filterMass"
                         small
+                        depressed
                     >
-                    <v-icon left>
-                        fas fa-search
-                    </v-icon>
-                    Поиск
+                    Искать
                     </v-btn>
 
                     <v-btn
@@ -80,11 +82,18 @@
                         outlined
                         @click="clearMass"
                         small
+                        class="expand-close"
                     >
-                    <v-icon left>
-                        far fa-times-circle
-                    </v-icon>
-                    Очистить
+                    Очистить поиск
+                    </v-btn>
+                        <v-btn
+                        color="#D71B1B"
+                        outlined
+                        @click="clearMass"
+                        small
+                        class="small-close ml-2"
+                    >
+                    <v-icon color="#D71B1B" small>fas fa-times</v-icon>
                     </v-btn>
                 </v-col>
             </v-row>
@@ -266,10 +275,10 @@
         downloadFileListOfCitiesFromSite () {
             this.loading=true;
             console.log("Разработчик Роман Дробязкин")
-            fetch('/listOfCities.xlsx', 
-            //fetch('https://skynet-service.com/price/listOfCities.xlsx', 
+            //fetch('/listOfCities.xlsx', 
+            fetch('https://skynet-service.com/price/listOfCities.xlsx', 
             {
-              method: 'GET', // *GET, POST, PUT, DELETE, etc.             
+              method: 'GET',           
             }).then(response => response.blob()).then(blob => {
               this.fileToJsonCity(this.blobToFile(blob, "City"))
             })
@@ -296,7 +305,7 @@
                     };
                     fileReader.readAsBinaryString(file);
                 }
-                setTimeout(this.initialization, 1000); //this.initialization(); 
+                setTimeout(this.initialization, 1000); 
             },
 
 
@@ -306,7 +315,7 @@
             {
                 fetch(e.Link, 
                 {
-                method: 'GET', // *GET, POST, PUT, DELETE, etc.             
+                method: 'GET',             
                 }).then(response => response.blob()).then(blob => {
                 this.fileToDevExtreme(this.blobToFile(blob, "test"))
                 })              
@@ -398,8 +407,7 @@
         },
 
         mounted() {
-          this.downloadFileListOfCitiesFromSite();     
-          //this.filterMass();        
+          this.downloadFileListOfCitiesFromSite();         
         },
 
         created() {
@@ -421,14 +429,51 @@
     white-space: normal !important;
 }
 
-    /*.v-application .primary--text:hover {
-        border-bottom: 2px solid;
-    }*/
+.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat) > .v-input__control > .v-input__slot {
+    box-shadow: none !important;
+}
+
+.v-select {
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}
+
+.v-text-field.v-text-field--solo .v-label {
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    color: #B6B6B6;
+}
+
+    .serch-but{
+        width: 172px !important;
+    }
+
+    .fa-search {
+    color: #B6B6B6 !important;
+    }
 
     .options {
         padding: 20px;
         margin-top: 20px;
         background-color: rgba(191, 191, 191, 0.15);
+    }
+
+    .v-btn__content {
+        font-family: 'Montserrat', sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 13px;
+        /*line-height: 20px;*/
+    }
+
+    .small-close{
+        display: none;
+    }
+
+    .expand-close{
+        display: inline-flex;;
     }
 
     .caption {
@@ -557,6 +602,20 @@
         display: none;
     }
 
+    .v-btn__content {
+        text-transform: initial !important;
+    }
+
+    @media screen and (max-width: 992px){ 
+        .small-close{
+            display: inline-flex;
+        }
+
+        .expand-close{
+            display: none;
+        }
+     }
+
          @media screen and (min-width: 638px){ 
          .no-margin{
              margin-top: -19px !important;
@@ -619,6 +678,10 @@
     .v-select {
         width: 300px;
         margin: 0 auto !important;
+    }
+
+    .serch-but{
+        width: 75% !important;
     }
 
     }
