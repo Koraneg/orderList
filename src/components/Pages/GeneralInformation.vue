@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-container fluid style="width:100%;">
+        <v-container>
             <v-row justify="center">
                 <v-dialog
                 v-model="loading"
@@ -17,7 +17,7 @@
                 </v-dialog>
             </v-row>
             
-            <v-row v-if="listOfCities.length!==0" no-gutters>
+            <v-row v-if="listOfCities.length!==0" no-gutters class="mb-5">
                 <v-col>
                     <v-row no-gutters>                       
                         <v-col md="auto" class="mr-3 mt-2 select-text">
@@ -32,6 +32,8 @@
                                 hide-details
                                 v-model="city"
                                 label="Ростов"
+                                background-color="#F4F4F4"
+                                elevation="0"
                             >
                                <template v-slot:selection="data">
                                     {{ data.item.Сity}}
@@ -43,7 +45,7 @@
                         </v-col>
                         <v-spacer class="no-spacer"></v-spacer>
                         <v-col md="auto">
-                            <div class="dx-button-mode-contained-copy">Скачать прайс лист</div>
+                            <div class="dx-button-mode-contained-copy">Скачать прайс-лист</div>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -275,8 +277,8 @@
         downloadFileListOfCitiesFromSite () {
             this.loading=true;
             console.log("Разработчик Роман Дробязкин")
-            //fetch('/listOfCities.xlsx', 
-            fetch('https://skynet-service.com/price/listOfCities.xlsx', 
+            fetch('/listOfCities.xlsx', 
+            //fetch('https://skynet-service.com/price/listOfCities.xlsx', 
             {
               method: 'GET',           
             }).then(response => response.blob()).then(blob => {
@@ -386,7 +388,7 @@
           }
           if(gridCell.rowType === 'group') {
             excelCell.value = gridCell.value;
-            excelCell.fill = { type: 'pattern', pattern:'solid', fgColor: { argb: '5983B0' } };
+            excelCell.fill = { type: 'pattern', pattern:'solid', fgColor: { argb: '0A74C0' } };
             excelCell.font = { color: { argb: 'FFFFFF' }, bold: true};
             excelCell.border = {
                 top: {style:'thin', color: {argb:'000000'}},
@@ -407,7 +409,7 @@
         },
 
         mounted() {
-          this.downloadFileListOfCitiesFromSite();         
+          this.downloadFileListOfCitiesFromSite();     
         },
 
         created() {
@@ -460,7 +462,7 @@
         background-color: rgba(191, 191, 191, 0.15);
     }
 
-    .v-btn__content {
+    .but-load {
         font-family: 'Montserrat', sans-serif;
         font-style: normal;
         font-weight: 500;
@@ -487,8 +489,18 @@
 
     .dx-datagrid-rowsview .dx-row.dx-group-row:not(.dx-row-focused) {
     color: #ffffff;
-    background-color: #5983B0;
+    background-color: #0A74C0;
     }
+
+    .v-select {
+    box-shadow: none !important;
+    color: #000 !important;
+}
+
+    .v-input__icon {
+    color: #000;
+}
+
 
     .dx-datagrid-group-opened {
         color: #ffffff;
@@ -503,27 +515,27 @@
     }
 
 
-        .dx-button-mode-contained-copy {
-        background-color: #0353B4;
-        border-color: #0353B4;
+    .dx-button-mode-contained-copy {
+        background-color: #0A74C0 ;
+        border-color: #0A74C0 ;
         color: #fff !important;
         width: 200px;
         padding: 5px;
         border-radius: 5px;
         text-align: center;
-        text-transform: capitalize;
+        text-transform: inherit;
     }
 
     .dx-button-mode-contained-copy:hover {
-    background-color: #033e7c;
-    border-color: #033e7c;
+    background-color: #0A74C0 ;
+    border-color: #0A74C0 ;
     color: #fff !important;
     
     }
 
     .dx-button-mode-contained-copy:focus {
-    background-color: #033e7c;
-    border-color: #033e7c;
+    background-color: #0A74C0 ;
+    border-color: #0A74C0 ;
     color: #fff !important;
     }
 
@@ -559,12 +571,13 @@
     }
 
     .select-text{
-        font-size: 17px !important;
-        font-weight: 500;
-        color: #bfbfbf;
-        padding-top: 8px !important;
-         /*   min-width: 300px;*/
-        /*text-align: right;*/
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 20px;
+        color: #0A74C0;
+        padding-top: 11px !important;
     }
 
     .load-card{

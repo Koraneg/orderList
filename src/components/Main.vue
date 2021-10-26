@@ -1,21 +1,11 @@
 <template>
   <div>
-  <v-app-bar app class="main-cont">
-      <v-container fluid style="width:100%; margin-left:-30px; margin-right:-30px;">
+  <v-app-bar app class="main-cont" 
+      absolute 
+      hide-on-scroll 
+      scroll-target="#scrolling-techniques-4">
+      <v-container>
         <v-row no-gutters>
-          <v-col md="auto">
-              <v-btn
-                class="mr-2 white--text"
-                fab
-                elevation="0"
-                style="background-color: #0353B4 !important;"
-                href="https://shop.skynet-service.com/"
-              >
-                <v-icon x-large>
-                  mdi-arrow-left-thin-circle-outline
-                </v-icon>
-              </v-btn>
-          </v-col>
           <v-col md="auto">
               <v-row  no-gutters class="mt-1">
                 <v-col>
@@ -53,8 +43,8 @@ export default {
 
 <style scoped>
   .main-cont{
-    background-color: #0353B4 !important;
-    font-family: Roboto !important;
+    background-color: #0A74C0 !important;
+    font-family: Montserrat !important;
     font-style: normal !important;
     font-weight: bold !important;
     font-size: 14px !important;
@@ -65,7 +55,7 @@ export default {
 
   .logo-text{
     text-align: left !important;
-    font-family: Roboto !important;
+    font-family: Montserrat !important;
     font-style: normal !important;
     font-weight: 900 !important;
     font-size: 23px !important;
@@ -75,7 +65,7 @@ export default {
   }
 
   .sub-logo{
-    font-family: Roboto !important;
+    font-family: Montserrat !important;
     font-style: normal !important;
     font-weight: bold !important;
     font-size: 14px !important;
