@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-container>
+        <v-container >
             <v-row justify="center">
                 <v-dialog
                 v-model="loading"
@@ -16,7 +16,6 @@
                 </v-card>
                 </v-dialog>
             </v-row>
-            
             <v-row v-if="listOfCities.length!==0" no-gutters class="mb-5">
                 <v-col>
                     <v-row no-gutters>                       
@@ -277,8 +276,8 @@
         downloadFileListOfCitiesFromSite () {
             this.loading=true;
             console.log("Разработчик Роман Дробязкин")
-            fetch('/listOfCities.xlsx', 
-            //fetch('https://skynet-service.com/price/listOfCities.xlsx', 
+            //fetch('/listOfCities.xlsx', 
+            fetch('https://skynet-service.com/price/listOfCities.xlsx', 
             {
               method: 'GET',           
             }).then(response => response.blob()).then(blob => {
@@ -302,7 +301,8 @@
                                 workbook.Sheets[sheet]
                             );
                             let jsonObject = JSON.stringify(rowObject, null, '\t');
-                          this.listOfCities = JSON.parse(jsonObject)                                                
+                          this.listOfCities = JSON.parse(jsonObject)    
+                          this.loadMy ()                                          
                         });
                     };
                     fileReader.readAsBinaryString(file);
@@ -310,6 +310,11 @@
                 setTimeout(this.initialization, 1000); 
             },
 
+        loadMy () {
+            this.$emit('loadMy', {
+            link: this.listOfCities[0]["mapLink"]
+            })
+        },
 
           downloadFileFromSite (e) {
             this.loading=true;
@@ -409,7 +414,7 @@
         },
 
         mounted() {
-          this.downloadFileListOfCitiesFromSite();     
+          this.downloadFileListOfCitiesFromSite();            
         },
 
         created() {
@@ -427,6 +432,7 @@
 </script>
 
 <style>
+
 .dx-datagrid-nowrap, .dx-datagrid-nowrap .dx-header-row>td>.dx-datagrid-text-content {
     white-space: normal !important;
 }
@@ -617,6 +623,14 @@
 
     .v-btn__content {
         text-transform: initial !important;
+    }
+
+    .fixed-serch{
+        position: fixed;
+        z-index: 3;
+        background: #fff;
+        top: -3px;
+        padding-top: 93px;
     }
 
     @media screen and (max-width: 992px){ 

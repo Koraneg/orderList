@@ -1,21 +1,21 @@
 <template>
-  <v-footer app class="main-cont">
+  <v-footer app class="main-cont" fixed>
     <v-container fluid>
       <v-row no-gutters  justify="center">
-          <v-col md="auto" class="mr-3">
+          <v-col md="auto" style="text-align: center;">
               <v-btn color="white" 
-              class="foot-but" 
+              class="foot-but left-but" 
               href="https://shop.skynet-service.com/"
-              min-width="300"
+              max-width="300"
               elevation="0"
               >Интернет магазин</v-btn>
-          </v-col>
-          <v-col md="auto" >
               <v-btn 
               color="white" 
               class="foot-but"
-              min-width="300"
+              max-width="300"
               elevation="0"
+              :href="mapLinkC"
+              target="_blank"
               >Мы на карте</v-btn>
           </v-col>
       </v-row>
@@ -26,12 +26,21 @@
 <script>
 export default {
 name: "Footer",
+props: ['mapLinkC'],
   data: () => ({
-
+      
   }),
 
   computed: {
     },
+
+  methods:{
+    
+  },
+
+   mounted() {
+
+  }
 }
 </script>
 
@@ -60,6 +69,45 @@ name: "Footer",
     line-height: 20px !important;
     text-align: center !important;
     color: #0A74C0 !important;
+    width: 300px;
   }
 
+  .left-but{
+    margin-right: 20px;
+  }
+
+  @media screen and (max-width: 675px) and (min-width: 504px){ 
+  .foot-but
+  {
+    font-size: 12px !important;
+    width: 214px;
+  }
+  }
+
+    @media screen and (max-width: 504px) and (min-width: 399px){ 
+  .foot-but
+  {
+    font-size: 12px !important;
+    width: 160px;
+  }
+  }
+
+  @media screen and (max-width: 399px) { 
+      .foot-but
+    {
+      font-size: 10px !important;
+      width: 120px;
+
+    }
+
+      .left-but{
+    margin-right: 5px;
+  }
+  }
+</style>
+
+<style>
+  .v-footer--fixed {
+    position: fixed !important;
+  }
 </style>

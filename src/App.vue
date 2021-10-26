@@ -3,11 +3,10 @@
       <Main />
     <v-main>
       <v-container fluid class="px-0 py-0">
-          <router-view></router-view>
+          <router-view @loadMy='onLoad'></router-view>
       </v-container>
     </v-main>
-
-      <Footer />
+      <Footer :mapLinkC="mapLink" />
   </v-app>
 </template>
 
@@ -24,8 +23,14 @@ export default {
   },
 
   data: () => ({
-    //
+    mapLink:""
   }),
+
+  methods: {
+  onLoad (data) {
+    this.mapLink = data.link
+  }
+}
 };
 </script>
 
