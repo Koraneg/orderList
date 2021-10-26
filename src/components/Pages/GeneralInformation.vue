@@ -276,8 +276,8 @@
         downloadFileListOfCitiesFromSite () {
             this.loading=true;
             console.log("Разработчик Роман Дробязкин")
-            //fetch('/listOfCities.xlsx', 
-            fetch('https://skynet-service.com/price/listOfCities.xlsx', 
+            fetch('/listOfCities.xlsx', 
+            //fetch('https://skynet-service.com/price/listOfCities.xlsx', 
             {
               method: 'GET',           
             }).then(response => response.blob()).then(blob => {
@@ -551,7 +551,7 @@
     color: #fff !important;
     width: 204px !important;
     position: relative;
-    top: -150px;
+    top: -160px;
     z-index: 3!important;
     opacity: 0;
     }
@@ -651,20 +651,20 @@
 
      @media screen and (max-width: 803px) and (min-width: 616px){ 
          .dx-button-mode-contained {
-             top: -180px;
+             top: -160px;
             }
      }
 
     @media screen and (max-width: 637px) and (min-width: 616px){ 
          .dx-button-mode-contained {
-             top: -154px;
+             top: -184px;
             }
      }
 
 
     @media screen and (max-width: 615px) and (min-width: 459px){ 
         .dx-button-mode-contained {
-            top: -146px;
+            top: -155px;
             left: -46%;
             width: 404px !important;
         }
@@ -690,7 +690,7 @@
 
     .dx-button-mode-contained {
     width: 646px !important;
-    top: -146px;
+    top: -155px;
     left: 9px;
     }
 
