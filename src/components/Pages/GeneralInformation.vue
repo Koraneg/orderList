@@ -153,6 +153,9 @@
                 </v-col>
             </v-row>
         </v-container>
+        <a href="#" class="topbutton">
+            <v-icon style="color: #fff !important;">fas fa-arrow-up</v-icon>
+        </a>
     </div>
 </template>
 
@@ -276,8 +279,8 @@
         downloadFileListOfCitiesFromSite () {
             this.loading=true;
             console.log("Разработчик Роман Дробязкин")
-            fetch('/listOfCities.xlsx', 
-            //fetch('https://skynet-service.com/price/listOfCities.xlsx', 
+            //fetch('/listOfCities.xlsx', 
+            fetch('https://skynet-service.com/price/listOfCities.xlsx', 
             {
               method: 'GET',           
             }).then(response => response.blob()).then(blob => {
@@ -411,6 +414,7 @@
       e.cancel = true;
     },
 
+    
         },
 
         mounted() {
@@ -530,6 +534,12 @@
         border-radius: 5px;
         text-align: center;
         text-transform: inherit;
+        font-family: Montserrat !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        line-height: 20px !important;
+
     }
 
     .dx-button-mode-contained-copy:hover {
@@ -631,6 +641,22 @@
         background: #fff;
         top: -3px;
         padding-top: 93px;
+    }
+
+    .topbutton {
+        position: fixed;
+        bottom: 50px;
+        right: 50px;
+        cursor: pointer;
+        background: rgba(10, 116, 192, 0.5);
+        padding: 10px;
+        border-radius: 50%;
+        text-decoration: none;
+        color: #fff !important;
+    }
+
+    .topbutton:hover {
+        background: #0A74C0;
     }
 
     @media screen and (max-width: 992px){ 
