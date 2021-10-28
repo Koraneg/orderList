@@ -2,7 +2,7 @@
   <div>
   <v-app-bar app class="main-cont" >
       <v-container>
-        <v-row no-gutters>
+        <v-row no-gutters style="justify-content:space-between;">
           <v-col md="auto">
               <v-row  no-gutters class="mt-1">
                 <v-col>
@@ -23,6 +23,7 @@
               elevation="0"
               text
               class="large-but"
+              target="_blank"
               ><span class="hover-span">Интернет магазин</span></v-btn>
               <v-btn 
               color="white" 
@@ -62,6 +63,7 @@
                   elevation="0"
                   text
                   class="pr-0"
+                  target="_blank"
                   ><span class="blue-text">Интернет магазин</span></v-btn>
                     </v-col>
               </v-row>
@@ -124,6 +126,7 @@ export default {
     line-height: 27px !important;
     letter-spacing: 0.36em !important;
     color: #FFFFFF !important;
+     letter-spacing:.06em !important;
   }
 
   .sub-logo{
@@ -136,8 +139,12 @@ export default {
     text-align: left !important;
   }
 
+  .hover-span{
+    border-bottom: 1px solid transparent !important;
+  }
+
   .hover-span:hover{
-    border-bottom: 1px solid white
+    border-bottom: 1px solid white !important;
   }
 
   .small-info{
